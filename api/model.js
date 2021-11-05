@@ -22,7 +22,7 @@ async function getRecipeById(recipe_id) {
   const result = {
     steps: [],
   };
-
+  const oldStep = { step_id: 0 };
   for (let step of recipe) {
     if (!result.recipe_id) {
       result.recipe_id = Number(recipe_id);
@@ -37,11 +37,19 @@ async function getRecipeById(recipe_id) {
       };
       for (let step of recipe) {
         if (step.step_id === aStep.step_id)
-          aStep.ingredients.push({
-            ingredient_name: step.ingredient_name,
-          });
+          step.ingredient_name
+            ? aStep.ingredients.push({
+                ingredient_name: step.ingredient_name,
+                ingredient_id: step.ingredient_id,
+              })
+            : null;
       }
-      result.steps.push(aStep);
+      if (oldStep.step_id !== step.step_id) {
+        console.log(oldStep.step_id);
+        console.log(step.step_id);
+        result.steps.push(aStep);
+        oldStep.step_id = aStep.step_id;
+      }
     }
   }
   return result;
