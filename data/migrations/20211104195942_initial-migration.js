@@ -32,6 +32,7 @@ exports.up = function (knex) {
         .unsigned()
         .references("ingredient_id")
         .inTable("ingredients");
+      table.string("quantity");
     });
 };
 
