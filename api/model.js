@@ -52,7 +52,10 @@ async function getRecipeById(recipe_id) {
       }
     }
   }
-  return result;
+
+  if ((await result.step_id) === undefined) {
+    return result;
+  }
 }
 
 module.exports = {

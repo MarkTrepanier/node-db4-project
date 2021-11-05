@@ -1,6 +1,6 @@
 const express = require("express");
 const Recipe = require("./model");
-
+const { checkRecipeId } = require("./middleware");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -11,12 +11,15 @@ router.get("/", (req, res) => {
     .catch();
 });
 
-router.get("/:recipe_id", (req, res) => {
-  Recipe.getRecipeById(req.params.recipe_id)
-    .then((resp) => {
-      res.status(200).json(resp);
-    })
-    .catch();
+router.get("/:recipe_id", checkRecipeId, (req, res, next) => {
+  res.status(200).json(req.recipe);
+});
+
+router.use((err, req, res, next) => {
+  // eslint-disable-line
+  res.status(err.status || 500).json({
+    message: err.message,
+  });
 });
 
 module.exports = router;
